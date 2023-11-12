@@ -1,0 +1,159 @@
+#motto {
+    font: bold 30px 'Quicksand',sans-serif;
+    color: white;
+    margin-top: 100px;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: rgba(32,34,37,255);
+}
+
+section {
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+  }
+section h2 {
+    color: white;
+}
+section p {
+    color: white;
+}
+
+#demo_image {
+    width: 500px;
+    height:auto;
+}
+
+/* styling time input */
+
+#time {
+    border: 1px solid rgb(7, 164, 255); /* border color */
+    border-radius: 5px;
+    padding: 8px;         /* padding inside the input box */
+    margin: 5px; 
+    width: 15%;         /* width of the input box */
+    height: 30px;   
+    font-family: 'Arial', sans-serif; /* font family */
+    font-size: 14px;                  /* font size */
+    background-color: #f4f4f4; /* background color */
+    box-shadow: 5px 5px 7px rgba(0, 0, 0, 0.1); /* box shadow */
+}
+
+#time::placeholder {
+    color: rgb(140, 140, 140); /* placeholder text color */
+    cursor: pointer;
+  }
+
+time:hover {
+    border-color: #66afe9; /* change border color on hover */
+  }
+  
+  time:focus {
+    outline: none; /* remove the default focus outline */
+    box-shadow: 0 0 5px #66afe9; /* add a box shadow on focus */
+  }
+
+
+  /* styling iframe inputs */
+
+
+  #userInput {
+    border: 1px solid rgb(7, 164, 255); /* border color */
+    border-radius: 5px;
+    padding: 8px;         /* padding inside the input box */
+    margin: 5px; 
+    width: 30%;         /* width of the input box */
+    height: 30px;   
+    font-family: 'Arial', sans-serif; /* font family */
+    font-size: 14px;                  /* font size */
+    background-color: #f4f4f4; /* background color */
+    box-shadow: 5px 5px 7px rgba(0, 0, 0, 0.1); /* box shadow */
+}
+
+#userInput::placeholder {
+    color: rgb(140, 140, 140); /* placeholder text color */
+    cursor: pointer;
+  }
+
+  #userInput:hover {
+    border-color: #66afe9; /* change border color on hover */
+  }
+  
+  #userInput:focus {
+    outline: none; /* remove the default focus outline */
+    box-shadow: 0 0 5px #66afe9; /* add a box shadow on focus */
+  }
+
+/* styling submit button*/
+#submitButton {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+/* tutorial boxes */
+
+.tutorial-box {
+    background-color: white;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 70px;
+    box-shadow: 0 12px 24px #000;
+  }
+
+  .tutorial-box h3{
+    color: #333;
+  }
+  .tutorial-box p {
+    color: black;
+  }
+
+  .tutorial-box img {
+    width: 30vw;
+    height: auto;
+  }
+
+  /* logo */
+
+  .logo {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    top: 100px;
+  }
+
+  .logo img {
+    width: 500px;
+    height: auto;
+  }
+
+/* footer */
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+footer p,footer a {
+      display: inline-block;
+      margin: 0;
+      vertical-align: middle;
+    }
+
+#github_link {
+    width: 100px;
+    height: auto;
+}

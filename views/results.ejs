@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Website</title>
+    <!--<link rel="icon" href="./favicon.ico" type="image/x-icon"> -->
+  </head>
+  <body>
+    <style>
+      .progress {
+            position: relative; /* this line does nothing to this div, but it allows position__text to be positioned absolutely to this */
+            width:490px;
+            height:70px;
+            background-color: gray;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10vh auto;
+        }
+        .progress__fill {
+            width:0%;
+            height:100%;
+            background-color: #009579; 
+            transition: all 2s;
+        }
+        .progress__text {
+            position: absolute; /* positions according to other elements*/
+            top: 50%; 
+            right:5px;
+            transform: translateY(-50%);
+            font: bold 50px 'Quicksand',sans-serif;
+            color: white;
+        }
+        .summary {
+            position: relative;
+            width: 50vw;
+            height: auto;
+            overflow: hidden;
+        }
+        .summary h3 {
+            font: bold 30px 'Quicksand',sans-serif;
+            color: black;
+        }
+        .stuff {
+            position: relative;
+            width: 50vw;
+            height: auto;
+            top: 50%;
+        }
+        #detailed_summary {
+            padding: 10px;
+            background-color: #ff3afc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 50px;
+            font: bold 30px 'Quicksand',sans-serif;
+        }
+        #retry {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            font: bold 30px 'Quicksand',sans-serif;
+        }
+
+        /* Modal*/
+        #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        }
+
+        #modal {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        }
+    </style>
+    <main>
+      <div class="progress">
+        <div class="progress__fill"></div>
+        <span class="progress__text">0%</span>
+    </div>
+    <center>
+        <div class="summary">
+            <h3><%=overallSummary%></h3>
+        </div>
+        <div class="stuff">
+            <button id="detailed_summary" onclick="openModal()">Detailed Feedback</button>
+            <button id="retry" onclick="redirectHome()">Retry</button>
+        </div>
+    </center>
+    <!-- Modal-->
+    <div id="overlay">
+        <div id="modal">
+          <span onclick="closeModal()" style="cursor: pointer; float: right;">&times;</span>
+          <h2>Detailed Feedback</h2>
+          <p><%= detailedFeedback %></p>
+        </div>
+      </div>
+    </main>
+    <script>
+        function updateProgressBar(progressBar, value) {
+            value = Math.round(value); // round up my value (for too many decimals)
+            progressBar.querySelector('.progress__fill').style.width = `${value}%`;
+            progressBar.querySelector('.progress__text').textContent = `${value}%`;
+        }
+
+        // modal script
+        function openModal() {
+            document.getElementById('overlay').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('overlay').style.display = 'none';
+        }
+        updateProgressBar(document.querySelector('.progress'), parseInt('<%= presentorGrade %>',10));
+
+        // retry button (redirect to home)
+        function redirectHome() {
+          // Redirect to the main path (root) of the website
+          window.location.href = window.location.origin;
+        }
+    </script>
+  </body>
+</html>

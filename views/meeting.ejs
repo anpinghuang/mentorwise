@@ -1,0 +1,199 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js Website</title>
+    <link rel="stylesheet" href="/css/meeting.css"> <!-- file in public/css/-->
+</head>
+<body>
+    <div class="container">
+        <div class="iframe-container">
+            <!---  <%= %>  would just display text --->
+            <!-- THIS <%- %> would add as HTML -->
+            <iframe src="<%= srcValue %>" id="resultIframe" onload="resizeIframe();"></iframe>
+        </div>
+
+        <%- include('slideshow') %>
+    </div>
+    
+    <div class="footer">
+        <div id="countdown"></div>
+        <p id="status">Not Connected</p>
+        <button id="stopButton">Stop</button>
+    </div>
+
+    <script>
+        // Function to dynamically resize the iframe based on its content
+        function resizeIframe() {
+          var iframe = document.getElementById('resultIframe');
+          var contentHeight = iframe.contentWindow.document.body.scrollHeight;
+          iframe.style.height = contentHeight + 'px';
+        }
+
+        // countdown
+
+        function startCountdown(minutes) {
+            // Convert minutes to milliseconds
+            const targetTime = new Date().getTime() + minutes * 60 * 1000;
+
+            // Update the countdown every second
+            const timerInterval = setInterval(function() {
+                const now = new Date().getTime();
+                const difference = targetTime - now;
+
+                // Check if the countdown is over
+                if (difference <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('countdown').innerHTML = "<p>Countdown expired!</p>";
+                } else {
+                // Calculate minutes and seconds
+                const remainingMinutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const remainingSeconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                // Display the countdown in the HTML element with id "countdown"
+                document.getElementById('countdown').innerHTML = `
+                    <p>Time left: ${remainingMinutes}m ${remainingSeconds}s</p>
+                `;
+                }
+            }, 1000);
+            }
+
+     // Start the countdown with a time of 10 minutes (you can change this)
+        
+
+      </script>
+
+    <!-- start of recording -->
+    <script>
+        let myText = "";
+        let mediaRecorder;
+        let socket;
+
+      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+        console.log({ stream })
+        if (!MediaRecorder.isTypeSupported('audio/webm'))
+          return alert('Browser not supported')
+        mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'audio/webm',
+        });
+        socket = new WebSocket('wss://api.deepgram.com/v1/listen', [
+          'token',
+          'a517f95b4f05a0715e98598abd319a4a0a18984f',
+        ]);
+
+        socket.onopen = () => {
+          document.querySelector('#status').textContent = 'Connected';
+          // if connected, then start timer
+          startCountdown( <%= time %> ); 
+          // END OF TIMER FUNCTION
+          document.querySelector('#stopButton');
+          console.log({ event: 'onopen' });
+
+          mediaRecorder.addEventListener('dataavailable', async (event) => {
+            if (event.data.size > 0 && socket.readyState == 1) {
+              socket.send(event.data);
+            }
+          });
+
+          mediaRecorder.start(1000);
+        }
+
+        socket.onmessage = (message) => {
+          const received = JSON.parse(message.data);
+          const transcript = received.channel.alternatives[0].transcript;
+          if (transcript && received.is_final) {
+            console.log(transcript);
+            myText += transcript + ' ';
+          }
+        }
+
+        socket.onclose = () => {
+          console.log({ event: 'onclose' });
+        }
+
+        socket.onerror = (error) => {
+          console.log({ event: 'onerror', error });
+        }
+      });
+
+      // IF THE COUNTDOWN EXPIRES, THEN SEND THE TRANSCRIPT OVER
+    //   if (document.getElementById('countdown').innerHTML == "<p>Countdown expired!</p>";) {
+    //     mediaRecorder.stop();
+    //     socket.close();
+    //     document.querySelector('#status').textContent = 'Connection Closed';
+    //     // myText is the transcript
+    //     // send the variable to app.js
+    //     fetch('/transcript', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'text/plain', // Set the content type to plain text
+    //             },
+    //             body: myText, // Directly send the string as the body
+    //         });
+    //   }
+
+      // IF STOPBUTTON IS PRESSED, THEN SEND THE TRANSCRIPT OVER
+      document.querySelector('#stopButton').addEventListener('click', () => {
+        mediaRecorder.stop();
+        socket.close();
+        document.querySelector('#status').textContent = 'Connection Closed';
+        // myText is the transcript
+        // send the variable to app.js
+        fetch('/getTranscript', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain', // Set the content type to plain text
+                },
+                body: myText, // Directly send the string as the body
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Redirect on the client side
+            window.location.href = data.redirectTo;
+        })
+        .catch(error => console.error('Error:', error));
+      });
+      
+      // when time expires, send the transcript over 
+      var targetElement = document.getElementById('countdown');
+
+      // Create a new instance of a MutationObserver and define a callback function
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          // Check if the content of the observed element is equal to "<p>Countdown expired!</p>"
+          if (mutation.target.innerHTML === '<p>Countdown expired!</p>') {
+              // Your desired action when the content matches
+              mediaRecorder.stop();
+              socket.close();
+              document.querySelector('#status').textContent = 'Connection Closed';
+              fetch('/getTranscript', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'text/plain', // Set the content type to plain text
+                      },
+                      body: myText, // Directly send the string as the body
+              })
+              .then(response => response.json())
+              .then(data => {
+                  // Redirect on the client side
+                  window.location.href = data.redirectTo;
+              })
+              .catch(error => console.error('Error:', error));
+            }
+          });
+      });
+
+      // Configure the observer to watch for changes in the child nodes and the character data of the target
+      var config = { childList: true, subtree: true, characterData: true };
+
+      // Start observing the target element with the specified configuration
+      observer.observe(targetElement, config);
+    </script> 
+    <!-- END OF recording -->
+</body>
+
+<footer>
+</footer>
+</html>

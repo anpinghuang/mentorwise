@@ -1,0 +1,62 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js Website</title>
+    <link rel="stylesheet" href="/css/home.css"> <!-- file in public/css/-->
+</head>
+<body><!-- include('navbar')  this would include a navbar-->
+    <center>
+        <div class="logo">
+            <img src="/images/logo_white.png" alt="Your Logo">
+          </div>
+        <h1 id="motto">Empower Confidence, Eliminate Anxiety, Present with Precision.</h1>
+        <form action="/submit" method="post">
+            <!-- time input -->
+            <input type="text" id="time" name="time" placeholder="Meeting time in Minutes" required>
+            <!-- link input -->
+            <input type="text" id="userInput" name="userInput" placeholder="Slideshow iFrame" required>
+            <button type="submit" id="submitButton">Submit</button>
+        </form>
+    </center>
+    <!-- Display a message if the input is not an iframe -->
+    <% if (typeof errorMessage !== 'undefined') { %>
+        <p style="color: red;"><%= errorMessage %></p>
+      <% } %>
+
+    <!-- display a message if time is not number-->
+    <% if (typeof errorMessage2 !== 'undefined') { %>
+        <p style="color: red;"><%= errorMessage2 %></p>
+      <% } %>
+
+      <section>
+        <h2>Why MentorWise</h2>
+        <p>People can unlock their presentation potential by receiving personalized, constructive feedback from AI after simulating an online meeting. This can boost your confidence and deliver more accurate and impactful presentations.</p>
+    
+        <div class="tutorial-box">
+            <h3>Step 1: Input Time and Google Slides embed link</h3>
+            <img src="/images/step1.png" alt="Step 1 Image">
+            <p>Enter your estimated meeting time in minutes, and then add your Google Slides link by going to File, Share, Publish to Web. Then go to the "Embed" tab and copy the embed link. </p>
+          </div>
+      
+          <div class="tutorial-box">
+            <h3>Step 2: Present!</h3>
+            <img src="/images/step2.png" alt="Step 2 Image">
+            <p>An Online Meeting environment will be simulated, and AI will analyze your language behavior and information accuracy to give valuable feedback and advice to improve your presentation.</p>
+          </div>
+      
+          <div class="tutorial-box">
+            <h3>Step 3: Results</h3>
+            <img src="/images/step3.png" alt="Step 3 Image">
+            <p>Results page will display a score based on how well you presented, as well as a short feedback to improve your presentation. In addition, you can view detailed feedback, and also retry for a higher score.</p>
+          </div>
+    
+      </section>
+    <footer>
+        <p>&copy; MentorWise by Anping Huang for NorcalHacks 2023 | Checkout the </p>
+        <a href="https://github.com/anpinghuang/mentorwise"><img src="/images/github_link.png" id="github_link"></a>
+    </footer>
+</body>
+</html>
