@@ -81,7 +81,7 @@ app.post('/getTranscript', (req, res) => { // have to include asyn before (req,r
     console.log('Received variable from EJS:', myTranscript);
     
     // CHATGPT
-    const apiKey = 'process.env.OPENAI_API_KEY'; // App might not run because disabled kei
+    const apiKey = process.env.OPENAI_API_KEY; // App might not run because disabled kei
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     async function getChatCompletion(prompt) {
