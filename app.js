@@ -29,10 +29,6 @@ app.use(session({
     saveUninitialized: true,
   }));
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
 // HOME PAGE --------------------------------------------------------------------
 app.get('/', (req, res) => { 
     res.render("index");
@@ -166,3 +162,5 @@ app.get('/results', (req, res) => {
 });
 
 // END OF RESULTS PAGE
+
+app.listen(process.env.PORT || port, () => console.log(`Listening on port ${port}`))
